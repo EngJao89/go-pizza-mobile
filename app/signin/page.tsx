@@ -1,9 +1,10 @@
 import { Text, View } from "react-native";
+import { styles } from "./styles";
 
 export default function SignInPage() {
   return (
-    <View>
-      <Text>Sign In</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Login</Text>
     </View>
   );
 }
