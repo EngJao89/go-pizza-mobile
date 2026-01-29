@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Text, TextInput, View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { styles } from "./styles";
 
 export default function SignInPage() {
@@ -10,6 +11,11 @@ export default function SignInPage() {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={require("@/assets/bg-preview .png")}
+        style={styles.backgroundImage}
+        contentFit="cover"
+      />
       <Text style={styles.title}>Login</Text>
       
       <View style={styles.form}>
