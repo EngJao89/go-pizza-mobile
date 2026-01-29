@@ -1,31 +1,36 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
 import { Platform } from 'react-native';
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
-
 export const Colors = {
-  light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
-  },
-  dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
-  },
+  GREEN_2: '#528F33',
+  GREEN_1: '#F7FFF9',
+
+  GRAY_3: '#7A6769',
+  GRAY_2: '#572D31',
+  GRAY_1: '#E1E1E6',
+
+  SECONDARY_900: '#572D31',
+  SECONDARY_500: '#7A6769',
+  SECONDARY_400: '#93797B',
+
+  RED_2: '#B83341',
+  RED_1: '#E03F50',
+
+  SHAPE: '#DCDCDC',
+  WHITE: '#FFFFFF',
 };
+
+export const Font_Size = {
+  XS: 12,
+  SM: 14,
+  MD: 16,
+  LG: 20,
+  XL: 36,
+  XXL: 40,
+  XXXL: 48,
+
+  TAG: 10,
+  BUTTON: 14,
+}
 
 export const Fonts = Platform.select({
   ios: {
