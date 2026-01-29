@@ -8,6 +8,11 @@ export const styles = StyleSheet.create({
     paddingBottom: 0,
     gap: 8,
   },
+  backgroundImage: {
+    width: '100%',
+    height: 200,
+    marginTop: 0,
+  },
   title: {
     fontSize: Font_Size.XXL,
     color: Colors.WHITE,
