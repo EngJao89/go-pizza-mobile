@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
   },
   backgroundImage: {
     width: '100%',
-    height: 200,
+    height: 450,
     marginTop: 0,
   },
   title: {
@@ -23,13 +23,14 @@ export const styles = StyleSheet.create({
     marginBottom: 12,
   },
   form: {
-    flex: 1,
     backgroundColor: Colors.WHITE,
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
-    paddingTop: 32,
-    paddingHorizontal: 32,
-    gap: 24,
+    paddingTop: 24,
+    paddingBottom: 20,
+    paddingHorizontal: 28,
+    gap: 20,
+    minHeight: 300,
   },
   inputContainer: {
     gap: 8,
