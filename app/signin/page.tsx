@@ -10,7 +10,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { router, type Href } from "expo-router";
+import { router, Link, type Href } from "expo-router";
 import api from "@/lib/axios";
 import { loginSchema, type LoginFormData } from "@/schemas/login";
 import { styles } from "./styles";
@@ -137,6 +137,12 @@ export default function SignInPage() {
             <Text style={styles.submitButtonText}>Entrar</Text>
           )}
         </TouchableOpacity>
+
+        <Link href="/signup/page" asChild>
+          <TouchableOpacity style={styles.linkButton}>
+            <Text style={styles.linkButtonText}>Criar conta</Text>
+          </TouchableOpacity>
+        </Link>
       </View>
     </View>
   );

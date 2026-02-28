@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
   },
   backgroundImage: {
     width: '100%',
-    height: 450,
+    height: 280,
     marginTop: 0,
   },
   title: {
@@ -23,17 +23,21 @@ export const styles = StyleSheet.create({
     marginBottom: 12,
   },
   form: {
+    flex: 1,
     backgroundColor: Colors.WHITE,
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     paddingTop: 24,
-    paddingBottom: 20,
+    paddingBottom: 32,
     paddingHorizontal: 28,
-    gap: 20,
-    minHeight: 300,
+    gap: 16,
+  },
+  formScroll: {
+    gap: 16,
+    paddingBottom: 24,
   },
   inputContainer: {
-    gap: 8,
+    gap: 6,
   },
   label: {
     fontSize: Font_Size.MD,
@@ -90,21 +94,12 @@ export const styles = StyleSheet.create({
   errorText: {
     color: Colors.RED_1,
     fontSize: Font_Size.SM,
-    marginTop: 4,
+    marginTop: 2,
   },
   formError: {
     color: Colors.RED_1,
     fontSize: Font_Size.SM,
     marginBottom: 8,
     textAlign: 'center',
-  },
-  linkButton: {
-    marginTop: 16,
-    alignItems: 'center',
-  },
-  linkButtonText: {
-    color: Colors.RED_2,
-    fontSize: Font_Size.MD,
-    fontWeight: '600',
   },
 });
