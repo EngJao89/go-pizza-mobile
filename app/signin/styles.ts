@@ -71,4 +71,31 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  submitButton: {
+    backgroundColor: Colors.RED_2,
+    borderRadius: 8,
+    paddingVertical: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 8,
+  },
+  submitButtonDisabled: {
+    opacity: 0.6,
+  },
+  submitButtonText: {
+    color: Colors.WHITE,
+    fontSize: Font_Size.MD,
+    fontWeight: '600',
+  },
+  errorText: {
+    color: Colors.RED_1,
+    fontSize: Font_Size.SM,
+    marginTop: 4,
+  },
+  formError: {
+    color: Colors.RED_1,
+    fontSize: Font_Size.SM,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
 });
