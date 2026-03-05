@@ -5,7 +5,7 @@ const defaultBaseURL =
   Platform.OS === "android"
     ? "http://192.168.100.9:8080/"
     : "http://localhost:8080/";
-const baseURL = process.env.EXPO_PUBLIC_API_URL ?? defaultBaseURL;
+export const baseURL = process.env.EXPO_PUBLIC_API_URL ?? defaultBaseURL;
 const timeout = 10000;
 
 const api: AxiosInstance = axios.create({
