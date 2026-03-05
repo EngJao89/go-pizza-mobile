@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import ListHeader from "@/components/ListHeader";
+import { View } from "react-native";
 
 export default function DashboardPage() {
   return (
     <View>
-      <Text>Dashboard</Text>
+      <ListHeader />
     </View>
   );
 }
