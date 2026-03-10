@@ -23,6 +23,13 @@ export default function PizzaDetailsPage() {
   const [pizza, setPizza] = useState<Pizza | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+
+  function toggleOption(option: string) {
+    setSelectedOptions((prev) =>
+      prev.includes(option) ? prev.filter((o) => o !== option) : [...prev, option]
+    );
+  }
 
   useEffect(() => {
     if (!id) {
@@ -82,6 +89,29 @@ export default function PizzaDetailsPage() {
       <Image source={{ uri: imageUri }} style={styles.image} />
       <Text style={styles.title}>{pizza.name}</Text>
       <Text style={styles.subtitle}>{pizza.description}</Text>
+
+      <View style={styles.info}>
+        {pizza.availableOptions.map((option) => {
+          const isSelected = selectedOptions.includes(option);
+          return (
+            <TouchableOpacity
+              key={option}
+              style={[styles.optionButton, isSelected && styles.optionButtonSelected]}
+              onPress={() => toggleOption(option)}
+              activeOpacity={0.8}
+            >
+              <Text
+                style={[
+                  styles.optionButtonText,
+                  isSelected && styles.optionButtonTextSelected,
+                ]}
+              >
+                {option}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
     </View>
   );
 }

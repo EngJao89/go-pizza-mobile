@@ -42,8 +42,10 @@ export const styles = StyleSheet.create({
   },
   info: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 8,
     marginBottom: 24,
     marginTop: 0,
   },
@@ -53,6 +55,26 @@ export const styles = StyleSheet.create({
     fontWeight: '400',
     marginLeft: 8,
     marginRight: 16,
+  },
+  optionButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.SHAPE,
+    backgroundColor: Colors.GRAY_1,
+  },
+  optionButtonSelected: {
+    borderColor: Colors.RED_2,
+    backgroundColor: Colors.GREEN_1,
+  },
+  optionButtonText: {
+    color: Colors.GRAY_2,
+    fontSize: Font_Size.SM,
+    fontWeight: '600',
+  },
+  optionButtonTextSelected: {
+    color: Colors.RED_2,
   },
   selectContent: {
     width: '100%',
