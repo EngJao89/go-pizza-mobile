@@ -13,6 +13,13 @@ export const styles = StyleSheet.create({
     marginLeft: 24,
     marginRight: 24,
   },
+  image: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 64,
+    width: '75%',
+  },
   title: {
     fontSize: Font_Size.XXL,
     color: Colors.GRAY_2,
@@ -32,5 +39,38 @@ export const styles = StyleSheet.create({
     marginTop: 12,
     marginLeft: 24,
     marginRight: 36,
+  },
+  info: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+    marginTop: 0,
+  },
+  contentText: {
+    color: Colors.GRAY_2,
+    fontSize: Font_Size.MD,
+    fontWeight: '400',
+    marginLeft: 8,
+    marginRight: 16,
+  },
+  selectContent: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginTop: 40,
+    marginBottom: 40,
+  },
+  selectText: {
+    color: Colors.GRAY_2,
+    fontSize: Font_Size.LG,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  footer: {
+    flexDirection: 'row',
+    marginBottom: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
