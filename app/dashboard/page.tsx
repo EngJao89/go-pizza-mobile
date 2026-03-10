@@ -5,6 +5,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { router, type Href } from "expo-router";
 import CardMenu from "@/components/CardMenu";
 import ListHeader from "@/components/ListHeader";
 import api from "@/lib/axios";
@@ -58,7 +59,12 @@ export default function DashboardPage() {
       <FlatList
         data={pizzas}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <CardMenu pizza={item} />}
+        renderItem={({ item }) => (
+          <CardMenu
+            pizza={item}
+            onPress={() => router.push(`/details/${item.id}` as Href)}
+          />
+        )}
         contentContainerStyle={{ paddingBottom: 24 }}
       />
     </View>
