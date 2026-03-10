@@ -16,7 +16,7 @@ import { Image } from "expo-image";
 import { router, type Href } from "expo-router";
 import api from "@/lib/axios";
 import { signupSchema, type SignupFormData } from "@/schemas/signup";
-import { styles } from "./styles";
+import { styles } from "./_styles";
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);

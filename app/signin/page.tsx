@@ -13,7 +13,7 @@ import { Image } from "expo-image";
 import { router, Link, type Href } from "expo-router";
 import api from "@/lib/axios";
 import { loginSchema, type LoginFormData } from "@/schemas/login";
-import { styles } from "./styles";
+import { styles } from "./_styles";
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
