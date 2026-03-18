@@ -1,35 +1,38 @@
-import { Text, View } from "react-native";
+import { useState } from "react";
+import { FlatList, View } from "react-native";
 import FooterTabs from "@/components/FooterTabs";
+import OrderCard from "@/components/OrderCard";
+import OrdersEmptyState from "@/components/OrdersEmptyState";
+import OrdersHeader from "@/components/OrdersHeader";
+import { MOCK_ORDERS } from "@/data/mockOrders";
+import type { OrderItem } from "@/types/order";
+import { styles } from "./styles";
 
 export default function OrdersPage() {
+  const [orders] = useState<OrderItem[]>(MOCK_ORDERS);
+
   return (
-    <View style={{ flex: 1, backgroundColor: "#F4F4F5" }}>
-      <View
-        style={{
-          flex: 1,
-          paddingHorizontal: 24,
-          paddingTop: 32,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: "700",
-            marginBottom: 8,
-            color: "#572D31",
-          }}
-        >
-          Pedidos
-        </Text>
-        <Text
-          style={{
-            color: "#7A6769",
-          }}
-        >
-          Você ainda não possui pedidos em aberto.
-        </Text>
-      </View>
-      <FooterTabs ordersCount={0} />
+    <View style={styles.screen}>
+      <OrdersHeader />
+      {orders.length === 0 ? (
+        <OrdersEmptyState />
+      ) : (
+        <FlatList
+          data={orders}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          scrollEnabled
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listContent}
+          renderItem={({ item, index }) => (
+            <OrderCard
+              order={item}
+              showRightBorder={index % 2 === 0}
+            />
+          )}
+        />
+      )}
+      <FooterTabs ordersCount={orders.length} />
     </View>
   );
 }
