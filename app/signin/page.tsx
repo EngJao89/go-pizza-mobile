@@ -5,15 +5,21 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
+  Pressable,
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router, Link, type Href } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
 import api from "@/lib/axios";
 import { loginSchema, type LoginFormData } from "@/schemas/login";
 import { styles } from "./_styles";
+
+const PLACEHOLDER = "rgba(255,255,255,0.72)";
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -50,29 +56,38 @@ export default function SignInPage() {
   }
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={require("@/assets/bg-preview .png")}
-        style={styles.backgroundImage}
-        contentFit="cover"
-      />
-      <Text style={styles.title}>Login</Text>
+    <SafeAreaView style={styles.safe} edges={["top", "left", "right"]}>
+      <StatusBar style="light" />
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+      >
+        <View style={styles.hero}>
+          <Image
+            source={require("@/assets/bg-preview .png")}
+            style={styles.heroImage}
+            contentFit="contain"
+          />
+        </View>
 
-      <View style={styles.form}>
-        {apiError ? (
-          <Text style={styles.formError}>{apiError}</Text>
-        ) : null}
+        <View style={styles.form}>
+          <Text style={styles.title}>Login</Text>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>E-mail</Text>
+          {apiError ? (
+            <Text style={styles.formError}>{apiError}</Text>
+          ) : null}
+
           <Controller
             control={control}
             name="email"
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
                 style={styles.input}
-                placeholder="Digite seu e-mail"
-                placeholderTextColor="#93797B"
+                placeholder="E-mail"
+                placeholderTextColor={PLACEHOLDER}
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
@@ -85,10 +100,7 @@ export default function SignInPage() {
           {errors.email?.message ? (
             <Text style={styles.errorText}>{errors.email.message}</Text>
           ) : null}
-        </View>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Senha</Text>
           <Controller
             control={control}
             name="password"
@@ -96,8 +108,8 @@ export default function SignInPage() {
               <View style={styles.passwordContainer}>
                 <TextInput
                   style={styles.passwordInput}
-                  placeholder="Digite sua senha"
-                  placeholderTextColor="#93797B"
+                  placeholder="Senha"
+                  placeholderTextColor={PLACEHOLDER}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -108,11 +120,12 @@ export default function SignInPage() {
                 <TouchableOpacity
                   style={styles.eyeButton}
                   onPress={() => setShowPassword((prev) => !prev)}
+                  hitSlop={12}
                 >
                   <Ionicons
-                    name={showPassword ? "eye-off" : "eye"}
-                    size={20}
-                    color="#7A6769"
+                    name={showPassword ? "eye-off-outline" : "eye-outline"}
+                    size={22}
+                    color="rgba(255,255,255,0.85)"
                   />
                 </TouchableOpacity>
               </View>
@@ -121,29 +134,36 @@ export default function SignInPage() {
           {errors.password?.message ? (
             <Text style={styles.errorText}>{errors.password.message}</Text>
           ) : null}
-        </View>
 
-        <TouchableOpacity
-          style={[
-            styles.submitButton,
-            isSubmitting && styles.submitButtonDisabled,
-          ]}
-          onPress={handleSubmit(onSubmit)}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.submitButtonText}>Entrar</Text>
-          )}
-        </TouchableOpacity>
+          <View style={styles.forgotRow}>
+            <Pressable onPress={() => {}}>
+              <Text style={styles.forgotText}>Esqueci minha senha</Text>
+            </Pressable>
+          </View>
 
-        <Link href="/signup/page" asChild>
-          <TouchableOpacity style={styles.linkButton}>
-            <Text style={styles.linkButtonText}>Criar conta</Text>
+          <TouchableOpacity
+            style={[
+              styles.submitButton,
+              isSubmitting && styles.submitButtonDisabled,
+            ]}
+            onPress={handleSubmit(onSubmit)}
+            disabled={isSubmitting}
+            activeOpacity={0.9}
+          >
+            {isSubmitting ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.submitButtonText}>Entrar</Text>
+            )}
           </TouchableOpacity>
-        </Link>
-      </View>
-    </View>
+
+          <Link href="/signup/page" asChild>
+            <TouchableOpacity style={styles.linkButton}>
+              <Text style={styles.linkButtonText}>Criar conta</Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
