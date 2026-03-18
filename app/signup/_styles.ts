@@ -1,105 +1,129 @@
-import { Colors, Font_Size } from '@/constants/theme';
-import { StyleSheet } from 'react-native';
+import { Colors, Font_Size, Fonts } from '@/constants/theme';
+import { Dimensions, Platform, StyleSheet } from 'react-native';
+
+const H_PADDING = 28;
+const winH = Dimensions.get('window').height;
+const inputBg = 'rgba(255, 255, 255, 0.16)';
+const inputBorder = 'rgba(255, 255, 255, 0.28)';
 
 export const styles = StyleSheet.create({
-  container: {
+  safe: {
     flex: 1,
-    backgroundColor: Colors.RED_2,
-    paddingBottom: 0,
-    gap: 8,
+    backgroundColor: Colors.SIGNIN_BG,
   },
-  backgroundImage: {
+  scroll: {
+    flexGrow: 1,
+  },
+  container: {
+    flexGrow: 1,
+    backgroundColor: Colors.SIGNIN_BG,
+    paddingBottom: 36,
+    minHeight: winH,
+  },
+  /** Hero menor que signin — mais campos no formulário */
+  hero: {
     width: '100%',
-    height: 280,
-    marginTop: 0,
+    height: Math.min(winH * 0.34, 300),
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 8,
   },
-  title: {
-    fontSize: Font_Size.XXL,
-    color: Colors.WHITE,
-    fontWeight: 'bold',
-    marginLeft: 32,
-    marginRight: 16,
-    marginTop: 12,
-    marginBottom: 12,
+  heroImage: {
+    width: '100%',
+    height: '100%',
   },
   form: {
-    flex: 1,
-    backgroundColor: Colors.WHITE,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
-    paddingTop: 24,
-    paddingBottom: 32,
-    paddingHorizontal: 28,
-    gap: 16,
+    paddingHorizontal: H_PADDING,
+    paddingTop: 4,
+    gap: 14,
   },
-  formScroll: {
-    gap: 16,
-    paddingBottom: 24,
-  },
-  inputContainer: {
-    gap: 6,
-  },
-  label: {
-    fontSize: Font_Size.MD,
-    color: Colors.SECONDARY_900,
-    fontWeight: '600',
+  title: {
+    fontFamily: Fonts.serif,
+    fontSize: Font_Size.XXXL,
+    color: Colors.WHITE,
+    fontWeight: Platform.OS === 'ios' ? '700' : 'bold',
+    marginBottom: 8,
+    letterSpacing: -0.5,
   },
   input: {
-    backgroundColor: Colors.GRAY_1,
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    backgroundColor: inputBg,
+    borderRadius: 12,
+    paddingHorizontal: 18,
+    paddingVertical: Platform.OS === 'ios' ? 16 : 14,
     fontSize: Font_Size.MD,
-    color: Colors.SECONDARY_900,
+    color: Colors.WHITE,
     borderWidth: 1,
-    borderColor: Colors.SHAPE,
+    borderColor: inputBorder,
   },
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.GRAY_1,
-    borderRadius: 8,
+    backgroundColor: inputBg,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: Colors.SHAPE,
+    borderColor: inputBorder,
   },
   passwordInput: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingHorizontal: 18,
+    paddingVertical: Platform.OS === 'ios' ? 16 : 14,
     fontSize: Font_Size.MD,
-    color: Colors.SECONDARY_900,
+    color: Colors.WHITE,
   },
   eyeButton: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
     paddingVertical: 14,
     justifyContent: 'center',
     alignItems: 'center',
   },
   submitButton: {
-    backgroundColor: Colors.RED_2,
-    borderRadius: 8,
-    paddingVertical: 14,
+    backgroundColor: Colors.SIGNIN_BUTTON,
+    borderRadius: 14,
+    paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 8,
+    marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
   },
   submitButtonDisabled: {
-    opacity: 0.6,
+    opacity: 0.65,
   },
   submitButtonText: {
     color: Colors.WHITE,
     fontSize: Font_Size.MD,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   errorText: {
-    color: Colors.RED_1,
+    color: 'rgba(255,255,255,0.95)',
     fontSize: Font_Size.SM,
-    marginTop: 2,
+    marginTop: 4,
+    textShadowColor: 'rgba(0,0,0,0.25)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   formError: {
-    color: Colors.RED_1,
+    color: Colors.WHITE,
     fontSize: Font_Size.SM,
-    marginBottom: 8,
     textAlign: 'center',
+    marginBottom: 4,
+    backgroundColor: 'rgba(0,0,0,0.12)',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+  },
+  linkButton: {
+    marginTop: 18,
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  linkButtonText: {
+    color: 'rgba(255,255,255,0.92)',
+    fontSize: Font_Size.SM,
+    fontWeight: '600',
+    textDecorationLine: 'underline',
   },
 });
