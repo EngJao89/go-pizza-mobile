@@ -13,10 +13,14 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { router, type Href } from "expo-router";
+import { router, Link, type Href } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
 import api from "@/lib/axios";
 import { signupSchema, type SignupFormData } from "@/schemas/signup";
 import { styles } from "./_styles";
+
+const PLACEHOLDER = "rgba(255,255,255,0.72)";
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -61,37 +65,42 @@ export default function SignUpPage() {
   }
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={require("@/assets/bg-preview .png")}
-        style={styles.backgroundImage}
-        contentFit="cover"
-      />
-      <Text style={styles.title}>Cadastro</Text>
-
+    <SafeAreaView style={styles.safe} edges={["top", "left", "right"]}>
+      <StatusBar style="light" />
       <KeyboardAvoidingView
-        style={styles.form}
+        style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <ScrollView
-          contentContainerStyle={styles.formScroll}
-          showsVerticalScrollIndicator={false}
+          style={styles.scroll}
+          contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          bounces={false}
         >
-          {apiError ? (
-            <Text style={styles.formError}>{apiError}</Text>
-          ) : null}
+          <View style={styles.hero}>
+            <Image
+              source={require("@/assets/bg-preview .png")}
+              style={styles.heroImage}
+              contentFit="contain"
+            />
+          </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Nome</Text>
+          <View style={styles.form}>
+            <Text style={styles.title}>Cadastro</Text>
+
+            {apiError ? (
+              <Text style={styles.formError}>{apiError}</Text>
+            ) : null}
+
             <Controller
               control={control}
               name="name"
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   style={styles.input}
-                  placeholder="Digite seu nome"
-                  placeholderTextColor="#93797B"
+                  placeholder="Nome"
+                  placeholderTextColor={PLACEHOLDER}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -102,18 +111,15 @@ export default function SignUpPage() {
             {errors.name?.message ? (
               <Text style={styles.errorText}>{errors.name.message}</Text>
             ) : null}
-          </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>E-mail</Text>
             <Controller
               control={control}
               name="email"
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   style={styles.input}
-                  placeholder="Digite seu e-mail"
-                  placeholderTextColor="#93797B"
+                  placeholder="E-mail"
+                  placeholderTextColor={PLACEHOLDER}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -126,18 +132,15 @@ export default function SignUpPage() {
             {errors.email?.message ? (
               <Text style={styles.errorText}>{errors.email.message}</Text>
             ) : null}
-          </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Telefone</Text>
             <Controller
               control={control}
               name="phone"
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   style={styles.input}
-                  placeholder="(00) 00000-0000"
-                  placeholderTextColor="#93797B"
+                  placeholder="Telefone"
+                  placeholderTextColor={PLACEHOLDER}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -148,18 +151,15 @@ export default function SignUpPage() {
             {errors.phone?.message ? (
               <Text style={styles.errorText}>{errors.phone.message}</Text>
             ) : null}
-          </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>CPF</Text>
             <Controller
               control={control}
               name="cpf"
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   style={styles.input}
-                  placeholder="000.000.000-00"
-                  placeholderTextColor="#93797B"
+                  placeholder="CPF"
+                  placeholderTextColor={PLACEHOLDER}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -170,18 +170,15 @@ export default function SignUpPage() {
             {errors.cpf?.message ? (
               <Text style={styles.errorText}>{errors.cpf.message}</Text>
             ) : null}
-          </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Data de nascimento</Text>
             <Controller
               control={control}
               name="birthday"
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   style={styles.input}
-                  placeholder="AAAA-MM-DD"
-                  placeholderTextColor="#93797B"
+                  placeholder="Data de nascimento (AAAA-MM-DD)"
+                  placeholderTextColor={PLACEHOLDER}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -192,10 +189,7 @@ export default function SignUpPage() {
             {errors.birthday?.message ? (
               <Text style={styles.errorText}>{errors.birthday.message}</Text>
             ) : null}
-          </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Senha</Text>
             <Controller
               control={control}
               name="password"
@@ -203,8 +197,8 @@ export default function SignUpPage() {
                 <View style={styles.passwordContainer}>
                   <TextInput
                     style={styles.passwordInput}
-                    placeholder="Mínimo 6 caracteres"
-                    placeholderTextColor="#93797B"
+                    placeholder="Senha"
+                    placeholderTextColor={PLACEHOLDER}
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -215,11 +209,12 @@ export default function SignUpPage() {
                   <TouchableOpacity
                     style={styles.eyeButton}
                     onPress={() => setShowPassword((prev) => !prev)}
+                    hitSlop={12}
                   >
                     <Ionicons
-                      name={showPassword ? "eye-off" : "eye"}
-                      size={20}
-                      color="#7A6769"
+                      name={showPassword ? "eye-off-outline" : "eye-outline"}
+                      size={22}
+                      color="rgba(255,255,255,0.85)"
                     />
                   </TouchableOpacity>
                 </View>
@@ -228,24 +223,31 @@ export default function SignUpPage() {
             {errors.password?.message ? (
               <Text style={styles.errorText}>{errors.password.message}</Text>
             ) : null}
-          </View>
 
-          <TouchableOpacity
-            style={[
-              styles.submitButton,
-              isSubmitting && styles.submitButtonDisabled,
-            ]}
-            onPress={handleSubmit(onSubmit)}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.submitButtonText}>Cadastrar</Text>
-            )}
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.submitButton,
+                isSubmitting && styles.submitButtonDisabled,
+              ]}
+              onPress={handleSubmit(onSubmit)}
+              disabled={isSubmitting}
+              activeOpacity={0.9}
+            >
+              {isSubmitting ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.submitButtonText}>Cadastrar</Text>
+              )}
+            </TouchableOpacity>
+
+            <Link href="/signin/page" asChild>
+              <TouchableOpacity style={styles.linkButton}>
+                <Text style={styles.linkButtonText}>Já tenho conta</Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   );
 }

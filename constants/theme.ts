@@ -14,7 +14,7 @@ export const Colors = {
 
   RED_2: '#B83341',
   RED_1: '#E03F50',
-  /** Tela de login — fundo e botão principal */
+
   SIGNIN_BG: '#E03D4C',
   SIGNIN_BUTTON: '#FF415B',
 
