@@ -21,6 +21,7 @@ export default function RootLayout() {
             <Stack.Screen name="details/[id]" />
             <Stack.Screen name="orders/page" />
             <Stack.Screen name="pizza-register/page" />
+            <Stack.Screen name="pizza-edit/[id]/page" />
           </Stack>
           <StatusBar style="auto" />
         </ThemeProvider>

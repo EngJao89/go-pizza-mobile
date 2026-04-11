@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { Pizza } from "@/types/pizza";
 
 function parseMoneyString(s: string): number {
   const n = Number(s.trim().replace(",", "."));
@@ -31,5 +32,21 @@ export function formToSizesAndPrices(data: PizzaFlavorFormData): Record<string, 
     P: parseMoneyString(data.priceP),
     M: parseMoneyString(data.priceM),
     G: parseMoneyString(data.priceG),
+  };
+}
+
+/** Valores exibidos no formulário (ex.: `59,90`), compatíveis com `parseMoneyString`. */
+export function formatDecimalForForm(value: number): string {
+  return value.toFixed(2).replace(".", ",");
+}
+
+export function pizzaToFlavorFormDefaults(pizza: Pizza): PizzaFlavorFormData {
+  const sp = pizza.sizesAndPrices ?? {};
+  return {
+    name: pizza.name ?? "",
+    description: pizza.description ?? "",
+    priceP: sp.P == null ? "" : formatDecimalForForm(sp.P),
+    priceM: sp.M == null ? "" : formatDecimalForForm(sp.M),
+    priceG: sp.G == null ? "" : formatDecimalForForm(sp.G),
   };
 }

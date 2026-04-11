@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -14,32 +14,53 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
-import { router, type Href } from "expo-router";
+import { router, useLocalSearchParams, type Href } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import api, { baseURL } from "@/lib/axios";
+import {
+  formToSizesAndPrices,
+  pizzaFlavorFormSchema,
+  pizzaToFlavorFormDefaults,
+  type PizzaFlavorFormData,
+} from "@/schemas/pizzaFlavorForm";
+import type { Pizza } from "@/types/pizza";
+import { useAuth } from "@/contexts/AuthContext";
+import FooterTabs from "@/components/FooterTabs";
+import { styles } from "@/app/pizza-register/_styles";
 
-function leaveRegisterScreen() {
+const PLACEHOLDER_COLOR = "#93797B";
+
+function getImageUri(imageUrl: string): string {
+  const path = imageUrl.startsWith("/") ? imageUrl.slice(1) : imageUrl;
+  return `${baseURL}${path}`;
+}
+
+function leaveEditScreen() {
   if (router.canGoBack()) {
     router.back();
   } else {
     router.replace("/dashboard/page" as Href);
   }
 }
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import api from "@/lib/axios";
-import {
-  formToSizesAndPrices,
-  pizzaFlavorFormSchema,
-  type PizzaFlavorFormData,
-} from "@/schemas/pizzaFlavorForm";
-import { useAuth } from "@/contexts/AuthContext";
-import FooterTabs from "@/components/FooterTabs";
-import { styles } from "./_styles";
 
-const PLACEHOLDER_COLOR = "#93797B";
+function readApiMessage(e: unknown): string | null {
+  if (e && typeof e === "object" && "response" in e) {
+    return (e as { response?: { data?: { message?: string } } }).response?.data
+      ?.message ?? null;
+  }
+  return null;
+}
 
-export default function PizzaRegisterPage() {
+export default function PizzaEditPage() {
   const insets = useSafeAreaInsets();
+  const { id } = useLocalSearchParams<{ id: string }>();
   const { isAdmin } = useAuth();
+
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [loadingPizza, setLoadingPizza] = useState(true);
+  const [pizzaRecord, setPizzaRecord] = useState<Pizza | null>(null);
+  const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [imageMime, setImageMime] = useState<string | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -47,6 +68,7 @@ export default function PizzaRegisterPage() {
   const {
     control,
     handleSubmit,
+    reset,
     watch,
     formState: { errors, isSubmitting },
   } = useForm<PizzaFlavorFormData>({
@@ -61,6 +83,32 @@ export default function PizzaRegisterPage() {
   });
 
   const descriptionLen = watch("description")?.length ?? 0;
+
+  const fetchPizza = useCallback(async () => {
+    if (!id || typeof id !== "string") {
+      setLoadError("Pizza não encontrada.");
+      setLoadingPizza(false);
+      return;
+    }
+    setLoadError(null);
+    setLoadingPizza(true);
+    try {
+      const { data } = await api.get<Pizza>(`api/pizza-flavors/${id}`);
+      setPizzaRecord(data);
+      reset(pizzaToFlavorFormDefaults(data));
+      setExistingImageUrl(data.imageUrl ? getImageUri(data.imageUrl) : null);
+      setImageUri(null);
+      setImageMime(null);
+    } catch {
+      setLoadError("Não foi possível carregar esta pizza.");
+    } finally {
+      setLoadingPizza(false);
+    }
+  }, [id, reset]);
+
+  useEffect(() => {
+    void fetchPizza();
+  }, [fetchPizza]);
 
   async function pickImage() {
     const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -83,13 +131,14 @@ export default function PizzaRegisterPage() {
   }
 
   async function onSubmit(data: PizzaFlavorFormData) {
+    if (!id || typeof id !== "string") return;
     setApiError(null);
     const sizesAndPrices = formToSizesAndPrices(data);
     const payload = {
       name: data.name.trim(),
       description: data.description.trim(),
       sizesAndPrices,
-      availableOptions: [] as string[],
+      availableOptions: pizzaRecord?.availableOptions ?? [],
     };
 
     try {
@@ -104,21 +153,45 @@ export default function PizzaRegisterPage() {
           name: "pizza.jpg",
           type: imageMime ?? "image/jpeg",
         } as unknown as Blob);
-        await api.post("api/pizza-flavors", form);
+        await api.put(`api/pizza-flavors/${id}`, form);
       } else {
-        await api.post("api/pizza-flavors", payload);
+        await api.put(`api/pizza-flavors/${id}`, payload);
       }
-      Alert.alert("Sucesso", "Pizza cadastrada.", [
+      Alert.alert("Sucesso", "Pizza atualizada.", [
         { text: "OK", onPress: () => router.replace("/dashboard/page" as Href) },
       ]);
     } catch (e: unknown) {
-      const msg =
-        e && typeof e === "object" && "response" in e
-          ? (e as { response?: { data?: { message?: string } } }).response?.data
-              ?.message
-          : null;
-      setApiError(msg ?? "Não foi possível cadastrar. Verifique os dados e tente de novo.");
+      setApiError(
+        readApiMessage(e) ??
+          "Não foi possível atualizar. Verifique os dados e tente de novo."
+      );
     }
+  }
+
+  function confirmDelete() {
+    if (!id || typeof id !== "string") return;
+    Alert.alert(
+      "Excluir sabor",
+      "Tem certeza? Esta ação não pode ser desfeita.",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await api.delete(`api/pizza-flavors/${id}`);
+              router.replace("/dashboard/page" as Href);
+            } catch (e: unknown) {
+              Alert.alert(
+                "Erro",
+                readApiMessage(e) ?? "Não foi possível excluir este sabor."
+              );
+            }
+          },
+        },
+      ]
+    );
   }
 
   if (!isAdmin) {
@@ -126,9 +199,9 @@ export default function PizzaRegisterPage() {
       <View style={[styles.screen, { justifyContent: "center", padding: 24 }]}>
         <StatusBar style="dark" />
         <Text style={{ textAlign: "center", color: "#572D31" }}>
-          Apenas administradores podem cadastrar sabores.
+          Apenas administradores podem alterar sabores.
         </Text>
-        <TouchableOpacity onPress={leaveRegisterScreen} style={{ marginTop: 16 }}>
+        <TouchableOpacity onPress={leaveEditScreen} style={{ marginTop: 16 }}>
           <Text style={{ color: "#B83341", fontWeight: "600", textAlign: "center" }}>
             Voltar
           </Text>
@@ -137,26 +210,46 @@ export default function PizzaRegisterPage() {
     );
   }
 
+  if (loadingPizza) {
+    return (
+      <View style={[styles.screen, { justifyContent: "center", alignItems: "center" }]}>
+        <StatusBar style="light" />
+        <ActivityIndicator size="large" color="#B83341" />
+      </View>
+    );
+  }
+
+  if (loadError || !id) {
+    return (
+      <View style={[styles.screen, { justifyContent: "center", padding: 24 }]}>
+        <StatusBar style="dark" />
+        <Text style={{ textAlign: "center", color: "#572D31" }}>
+          {loadError ?? "Pizza não encontrada."}
+        </Text>
+        <TouchableOpacity onPress={leaveEditScreen} style={{ marginTop: 16 }}>
+          <Text style={{ color: "#B83341", fontWeight: "600", textAlign: "center" }}>
+            Voltar
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  const displayPhotoUri = imageUri ?? existingImageUrl;
+
   return (
     <View style={styles.screen}>
       <StatusBar style="light" />
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
         <TouchableOpacity
           style={styles.backBtn}
-          onPress={leaveRegisterScreen}
+          onPress={leaveEditScreen}
           activeOpacity={0.8}
         >
           <Ionicons name="chevron-back" size={22} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Cadastrar</Text>
-        <Pressable
-          onPress={() =>
-            Alert.alert(
-              "Deletar",
-              "A exclusão de sabores fica disponível ao editar um item existente."
-            )
-          }
-        >
+        <Text style={styles.headerTitle}>Alterar</Text>
+        <Pressable onPress={confirmDelete}>
           <Text style={styles.deleteText}>Deletar</Text>
         </Pressable>
       </View>
@@ -169,8 +262,12 @@ export default function PizzaRegisterPage() {
       >
         <View style={styles.photoRow}>
           <View style={styles.photoCircle}>
-            {imageUri ? (
-              <Image source={{ uri: imageUri }} style={styles.photoPreview} contentFit="cover" />
+            {displayPhotoUri ? (
+              <Image
+                source={{ uri: displayPhotoUri }}
+                style={styles.photoPreview}
+                contentFit="cover"
+              />
             ) : (
               <Text style={styles.photoPlaceholder}>Nenhuma foto carregada</Text>
             )}
@@ -267,7 +364,7 @@ export default function PizzaRegisterPage() {
           {isSubmitting ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.submitBtnText}>Cadastrar pizza</Text>
+            <Text style={styles.submitBtnText}>Atualizar pizza</Text>
           )}
         </TouchableOpacity>
       </ScrollView>
