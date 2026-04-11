@@ -67,8 +67,22 @@ export const styles = StyleSheet.create({
     color: Colors.SECONDARY_500,
     fontWeight: '400',
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: 16,
     lineHeight: 22,
+  },
+  adminEditButton: {
+    alignSelf: 'center',
+    marginBottom: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: Colors.RED_2,
+  },
+  adminEditButtonText: {
+    color: Colors.RED_2,
+    fontSize: Font_Size.SM,
+    fontWeight: '600',
   },
   sectionTitle: {
     fontSize: Font_Size.MD,

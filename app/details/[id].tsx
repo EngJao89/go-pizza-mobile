@@ -1,18 +1,3 @@
-import { Colors } from "@/constants/theme";
-import api, { baseURL } from "@/lib/axios";
-import type { Pizza } from "@/types/pizza";
-import { priceFormatter } from "@/utils/currencyFormater";
-import { Ionicons } from "@expo/vector-icons";
-import { Image } from "expo-image";
-import { router, useLocalSearchParams, type Href } from "expo-router";
-
-function leaveDetailsScreen() {
-  if (router.canGoBack()) {
-    router.back();
-  } else {
-    router.replace("/dashboard/page" as Href);
-  }
-}
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -21,7 +6,23 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { Colors } from "@/constants/theme";
+import api, { baseURL } from "@/lib/axios";
+import type { Pizza } from "@/types/pizza";
+import { priceFormatter } from "@/utils/currencyFormater";
+import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
+import { router, useLocalSearchParams, type Href } from "expo-router";
+import { useAuth } from "@/contexts/AuthContext";
 import { styles } from "./_styles";
+
+function leaveDetailsScreen() {
+  if (router.canGoBack()) {
+    router.back();
+  } else {
+    router.replace("/dashboard/page" as Href);
+  }
+}
 
 function getImageUri(imageUrl: string): string {
   const path = imageUrl.startsWith("/") ? imageUrl.slice(1) : imageUrl;
@@ -30,6 +31,7 @@ function getImageUri(imageUrl: string): string {
 
 export default function PizzaDetailsPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { isAdmin } = useAuth();
   const [pizza, setPizza] = useState<Pizza | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -120,6 +122,16 @@ export default function PizzaDetailsPage() {
       <View style={styles.content}>
         <Text style={styles.title}>{pizza.name}</Text>
         <Text style={styles.subtitle}>{pizza.description}</Text>
+
+        {isAdmin ? (
+          <TouchableOpacity
+            style={styles.adminEditButton}
+            onPress={() => router.push(`/pizza-edit/${pizza.id}/page` as Href)}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.adminEditButtonText}>Alterar cadastro</Text>
+          </TouchableOpacity>
+        ) : null}
 
         <Text style={styles.sectionTitle}>Selecione um tamanho</Text>
 
