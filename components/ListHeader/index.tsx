@@ -1,7 +1,8 @@
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, type Href } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useAuth } from "@/contexts/AuthContext";
 import { styles } from "./styles";
 
 type ListHeaderProps = Readonly<{
@@ -16,9 +17,11 @@ export default function ListHeader({
   userName = "Garçom",
 }: ListHeaderProps) {
   const insets = useSafeAreaInsets();
+  const { signOut } = useAuth();
 
-  function handleLogout() {
-    router.replace("/signin/page");
+  async function handleLogout() {
+    await signOut();
+    router.replace("/signin/page" as Href);
   }
 
   return (

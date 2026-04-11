@@ -4,7 +4,15 @@ import type { Pizza } from "@/types/pizza";
 import { priceFormatter } from "@/utils/currencyFormater";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, type Href } from "expo-router";
+
+function leaveDetailsScreen() {
+  if (router.canGoBack()) {
+    router.back();
+  } else {
+    router.replace("/dashboard/page" as Href);
+  }
+}
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -74,7 +82,7 @@ export default function PizzaDetailsPage() {
         <Text style={{ color: Colors.RED_1, textAlign: "center", marginBottom: 16 }}>
           {error ?? "Pizza não encontrada."}
         </Text>
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity onPress={leaveDetailsScreen}>
           <Text style={{ color: Colors.RED_2, fontWeight: "600" }}>Voltar</Text>
         </TouchableOpacity>
       </View>
@@ -98,7 +106,7 @@ export default function PizzaDetailsPage() {
   return (
     <View style={styles.container}>
       <View style={styles.backContent}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backButton} onPress={leaveDetailsScreen}>
           <Ionicons name="arrow-back" size={22} color={Colors.WHITE} />
         </TouchableOpacity>
       </View>
