@@ -16,12 +16,15 @@ import { router, Link, type Href } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import api from "@/lib/axios";
+import { mapLoginResponseToSession } from "@/lib/map-login-response";
+import { useAuth } from "@/contexts/AuthContext";
 import { loginSchema, type LoginFormData } from "@/schemas/login";
 import { styles } from "./_styles";
 
 const PLACEHOLDER = "rgba(255,255,255,0.72)";
 
 export default function SignInPage() {
+  const { signIn } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
@@ -40,10 +43,11 @@ export default function SignInPage() {
   async function onSubmit(data: LoginFormData) {
     setApiError(null);
     try {
-      await api.post("api/auth/login", {
+      const res = await api.post("api/auth/login", {
         email: data.email,
         password: data.password,
       });
+      await signIn(mapLoginResponseToSession(res.data, data.email));
       router.replace("/dashboard/page" as Href);
     } catch (error: unknown) {
       const message =

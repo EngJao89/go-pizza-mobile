@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance } from "axios";
 import { Platform } from "react-native";
+import { getAuthToken } from "@/lib/auth-token";
 
 const defaultBaseURL =
   Platform.OS === "android"
@@ -18,6 +19,10 @@ const api: AxiosInstance = axios.create({
 
 api.interceptors.request.use(
   (config) => {
+    const token = getAuthToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => Promise.reject(error)

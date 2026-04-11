@@ -6,9 +6,11 @@ import OrdersEmptyState from "@/components/OrdersEmptyState";
 import OrdersHeader from "@/components/OrdersHeader";
 import { MOCK_ORDERS } from "@/data/mockOrders";
 import type { OrderItem } from "@/types/order";
+import { useAuth } from "@/contexts/AuthContext";
 import { styles } from "./styles";
 
 export default function OrdersPage() {
+  const { isAdmin } = useAuth();
   const [orders] = useState<OrderItem[]>(MOCK_ORDERS);
 
   return (
@@ -32,7 +34,7 @@ export default function OrdersPage() {
           )}
         />
       )}
-      <FooterTabs ordersCount={orders.length} />
+      <FooterTabs ordersCount={orders.length} isAdmin={isAdmin} />
     </View>
   );
 }

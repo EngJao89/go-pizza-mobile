@@ -1,48 +1,51 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import type { Href } from "expo-router";
 import { router, useSegments } from "expo-router";
+import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
 
 type FooterTabsProps = Readonly<{
   ordersCount?: number;
+  isAdmin?: boolean;
 }>;
 
-export default function FooterTabs({ ordersCount = 0 }: FooterTabsProps) {
+export default function FooterTabs({
+  ordersCount = 0,
+  isAdmin = false,
+}: FooterTabsProps) {
   const segments = useSegments();
-  const isOrders = segments[0] === "orders";
-
-  function goToDashboard() {
-    if (!isOrders) return;
-    router.replace("/dashboard/page");
-  }
-
-  function goToOrders() {
-    if (isOrders) return;
-    router.replace("/orders/page");
-  }
+  const root = segments[0] ?? "";
+  const isDashboard = root === "dashboard";
+  const isOrders = root === "orders";
+  const isRegister = root === "pizza-register";
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.tabWrapper}
-        onPress={goToDashboard}
+        onPress={() => {
+          if (!isDashboard) router.replace("/dashboard/page" as Href);
+        }}
         activeOpacity={0.8}
       >
         <View style={styles.tab}>
           <Text
             style={[
               styles.tabLabel,
-              !isOrders && styles.tabLabelActive,
+              isDashboard && styles.tabLabelActive,
             ]}
+            numberOfLines={1}
           >
             Cardápio
           </Text>
         </View>
-        {!isOrders && <View style={styles.underline} />}
+        {isDashboard && <View style={styles.underline} />}
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.tabWrapper}
-        onPress={goToOrders}
+        onPress={() => {
+          if (!isOrders) router.replace("/orders/page" as Href);
+        }}
         activeOpacity={0.8}
       >
         <View style={styles.tab}>
@@ -51,6 +54,7 @@ export default function FooterTabs({ ordersCount = 0 }: FooterTabsProps) {
               styles.tabLabel,
               isOrders && styles.tabLabelActive,
             ]}
+            numberOfLines={1}
           >
             Pedidos
           </Text>
@@ -62,7 +66,30 @@ export default function FooterTabs({ ordersCount = 0 }: FooterTabsProps) {
         </View>
         {isOrders && <View style={styles.underline} />}
       </TouchableOpacity>
+
+      {isAdmin ? (
+        <TouchableOpacity
+          style={styles.tabWrapper}
+          onPress={() => {
+            if (!isRegister) router.replace("/pizza-register/page" as Href);
+          }}
+          activeOpacity={0.8}
+        >
+          <View style={styles.tab}>
+            <Text
+              style={[
+                styles.tabLabel,
+                styles.tabLabelCompact,
+                isRegister && styles.tabLabelActive,
+              ]}
+              numberOfLines={1}
+            >
+              Cadastrar
+            </Text>
+          </View>
+          {isRegister && <View style={styles.underline} />}
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 }
-

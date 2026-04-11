@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
-    paddingHorizontal: 32,
+    paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 20,
     backgroundColor: Colors.WHITE,
@@ -52,5 +52,10 @@ export const styles = StyleSheet.create({
   },
   tabWrapper: {
     alignItems: "center",
+    flex: 1,
+    minWidth: 0,
+  },
+  tabLabelCompact: {
+    fontSize: Font_Size.SM,
   },
 });
