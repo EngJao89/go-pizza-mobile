@@ -17,9 +17,15 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
+    marginBottom: 4,
+  },
+  tabColumn: {
+    width: "100%",
+    alignItems: "center",
   },
   tabLabel: {
     fontSize: Font_Size.MD,
+    lineHeight: 22,
     color: Colors.SECONDARY_500,
     fontWeight: "500",
   },
@@ -41,12 +47,17 @@ export const styles = StyleSheet.create({
     fontSize: Font_Size.TAG,
     fontWeight: "700",
   },
-  underline: {
-    position: "absolute",
-    bottom: 4,
-    left: 0,
-    right: 0,
+  underlineSlot: {
+    height: 10,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    paddingBottom: 2,
+  },
+  underlineBar: {
     height: 3,
+    width: "78%",
+    maxWidth: 120,
     borderRadius: 999,
     backgroundColor: Colors.SECONDARY_900,
   },
@@ -57,5 +68,6 @@ export const styles = StyleSheet.create({
   },
   tabLabelCompact: {
     fontSize: Font_Size.SM,
+    lineHeight: 20,
   },
 });
