@@ -16,16 +16,9 @@ import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { router, type Href } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-
-function leaveRegisterScreen() {
-  if (router.canGoBack()) {
-    router.back();
-  } else {
-    router.replace("/dashboard/page" as Href);
-  }
-}
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import api from "@/lib/axios";
+import { slugifyImageName, uploadImageFile } from "@/lib/imageUpload";
 import {
   formToSizesAndPrices,
   pizzaFlavorFormSchema,
@@ -34,6 +27,14 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import FooterTabs from "@/components/FooterTabs";
 import { styles } from "./_styles";
+
+function leaveRegisterScreen() {
+  if (router.canGoBack()) {
+    router.back();
+  } else {
+    router.replace("/dashboard/page" as Href);
+  }
+}
 
 const PLACEHOLDER_COLOR = "#93797B";
 
@@ -85,7 +86,13 @@ export default function PizzaRegisterPage() {
   async function onSubmit(data: PizzaFlavorFormData) {
     setApiError(null);
     const sizesAndPrices = formToSizesAndPrices(data);
-    const payload = {
+    const payload: {
+      name: string;
+      description: string;
+      sizesAndPrices: ReturnType<typeof formToSizesAndPrices>;
+      availableOptions: string[];
+      imageUrl?: string;
+    } = {
       name: data.name.trim(),
       description: data.description.trim(),
       sizesAndPrices,
@@ -94,20 +101,15 @@ export default function PizzaRegisterPage() {
 
     try {
       if (imageUri) {
-        const form = new FormData();
-        form.append("name", payload.name);
-        form.append("description", payload.description);
-        form.append("sizesAndPrices", JSON.stringify(sizesAndPrices));
-        form.append("availableOptions", JSON.stringify(payload.availableOptions));
-        form.append("image", {
-          uri: imageUri,
-          name: "pizza.jpg",
-          type: imageMime ?? "image/jpeg",
-        } as unknown as Blob);
-        await api.post("api/pizza-flavors", form);
-      } else {
-        await api.post("api/pizza-flavors", payload);
+        const imageKey = slugifyImageName(payload.name);
+        const upload = await uploadImageFile(
+          imageUri,
+          imageMime ?? "image/jpeg",
+          imageKey
+        );
+        payload.imageUrl = upload.fileDownloadUri;
       }
+      await api.post("api/pizza-flavors", payload);
       Alert.alert("Sucesso", "Pizza cadastrada.", [
         { text: "OK", onPress: () => router.replace("/dashboard/page" as Href) },
       ]);
