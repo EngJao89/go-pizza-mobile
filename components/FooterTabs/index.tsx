@@ -1,12 +1,70 @@
 import type { Href } from "expo-router";
 import { router, useSegments } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { useEffect, type ReactNode } from "react";
+import { Pressable, Text, View } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
 import { styles } from "./styles";
 
 type FooterTabsProps = Readonly<{
   ordersCount?: number;
   isAdmin?: boolean;
 }>;
+
+const springActive = { damping: 18, stiffness: 280 };
+const springPress = { damping: 16, stiffness: 420 };
+
+function TabSlot({
+  active,
+  onPress,
+  children,
+}: Readonly<{
+  active: boolean;
+  onPress: () => void;
+  children: ReactNode;
+}>) {
+  const activeProgress = useSharedValue(active ? 1 : 0);
+  const pressed = useSharedValue(0);
+
+  useEffect(() => {
+    activeProgress.value = withSpring(active ? 1 : 0, springActive);
+  }, [active, activeProgress]);
+
+  const pressScale = useAnimatedStyle(() => ({
+    transform: [{ scale: 1 - 0.04 * pressed.value }],
+  }));
+
+  const underlineStyle = useAnimatedStyle(() => ({
+    opacity: activeProgress.value,
+    transform: [
+      { translateY: (1 - activeProgress.value) * 6 },
+      { scaleX: 0.35 + 0.65 * activeProgress.value },
+    ],
+  }));
+
+  return (
+    <Pressable
+      style={styles.tabWrapper}
+      onPress={onPress}
+      onPressIn={() => {
+        pressed.value = withSpring(1, springPress);
+      }}
+      onPressOut={() => {
+        pressed.value = withSpring(0, springPress);
+      }}
+    >
+      <Animated.View style={[styles.tabColumn, pressScale]}>
+        {children}
+        <View style={styles.underlineSlot}>
+          <Animated.View style={[styles.underlineBar, underlineStyle]} />
+        </View>
+      </Animated.View>
+    </Pressable>
+  );
+}
 
 export default function FooterTabs({
   ordersCount = 0,
@@ -20,60 +78,49 @@ export default function FooterTabs({
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.tabWrapper}
+      <TabSlot
+        active={isDashboard}
         onPress={() => {
           if (!isDashboard) router.replace("/dashboard/page" as Href);
         }}
-        activeOpacity={0.8}
       >
         <View style={styles.tab}>
           <Text
-            style={[
-              styles.tabLabel,
-              isDashboard && styles.tabLabelActive,
-            ]}
+            style={[styles.tabLabel, isDashboard && styles.tabLabelActive]}
             numberOfLines={1}
           >
             Cardápio
           </Text>
         </View>
-        {isDashboard && <View style={styles.underline} />}
-      </TouchableOpacity>
+      </TabSlot>
 
-      <TouchableOpacity
-        style={styles.tabWrapper}
+      <TabSlot
+        active={isOrders}
         onPress={() => {
           if (!isOrders) router.replace("/orders/page" as Href);
         }}
-        activeOpacity={0.8}
       >
         <View style={styles.tab}>
           <Text
-            style={[
-              styles.tabLabel,
-              isOrders && styles.tabLabelActive,
-            ]}
+            style={[styles.tabLabel, isOrders && styles.tabLabelActive]}
             numberOfLines={1}
           >
             Pedidos
           </Text>
-          {ordersCount > 0 && (
+          {ordersCount > 0 ? (
             <View style={styles.badge}>
               <Text style={styles.badgeText}>{ordersCount}</Text>
             </View>
-          )}
+          ) : null}
         </View>
-        {isOrders && <View style={styles.underline} />}
-      </TouchableOpacity>
+      </TabSlot>
 
       {isAdmin ? (
-        <TouchableOpacity
-          style={styles.tabWrapper}
+        <TabSlot
+          active={isRegister}
           onPress={() => {
             if (!isRegister) router.replace("/pizza-register/page" as Href);
           }}
-          activeOpacity={0.8}
         >
           <View style={styles.tab}>
             <Text
@@ -87,8 +134,7 @@ export default function FooterTabs({
               Cadastrar
             </Text>
           </View>
-          {isRegister && <View style={styles.underline} />}
-        </TouchableOpacity>
+        </TabSlot>
       ) : null}
     </View>
   );
