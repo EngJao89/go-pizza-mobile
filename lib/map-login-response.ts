@@ -9,9 +9,29 @@ function pickString(obj: Record<string, unknown>, keys: string[]): string | null
 }
 
 function pickUserObject(data: Record<string, unknown>): Record<string, unknown> | null {
-  const u = data.user;
-  if (u && typeof u === "object" && !Array.isArray(u)) return u as Record<string, unknown>;
+  const CANDIDATE_KEYS = ["user", "profile", "account", "currentUser"] as const;
+  for (const key of CANDIDATE_KEYS) {
+    const u = data[key];
+    if (u && typeof u === "object" && !Array.isArray(u)) return u as Record<string, unknown>;
+    if (Array.isArray(u) && u[0] && typeof u[0] === "object") {
+      return u[0] as Record<string, unknown>;
+    }
+  }
   return null;
+}
+
+function pickName(obj: Record<string, unknown>): string | null {
+  return pickString(obj, [
+    "name",
+    "nome",
+    "fullName",
+    "full_name",
+    "displayName",
+    "username",
+    "userName",
+    "firstName",
+    "first_name",
+  ]);
 }
 
 function isAdminFromRole(role: string | undefined | null): boolean {
@@ -51,6 +71,15 @@ function resolveTokenAndUser(data: unknown): Resolved {
   }
 
   const inner = root.data;
+  if (inner && typeof inner === "object" && !Array.isArray(inner)) {
+    const innerObj = inner as Record<string, unknown>;
+    const innerUser = pickUserObject(innerObj);
+    if (innerUser) {
+      return { tokenSource: { ...root, ...innerObj }, user: innerUser };
+    }
+    return { tokenSource: { ...root, ...innerObj }, user: innerObj };
+  }
+
   if (Array.isArray(inner) && inner[0] && typeof inner[0] === "object") {
     return { tokenSource: root, user: inner[0] as Record<string, unknown> };
   }
@@ -89,9 +118,9 @@ export function mapLoginResponseToSession(
     (typeof user.token === "string" ? user.token : null);
 
   const userName =
-    (typeof user.name === "string" && user.name) ||
+    pickName(user) ||
+    pickName(tokenSource) ||
     (typeof user.email === "string" && user.email) ||
-    (typeof tokenSource.name === "string" && tokenSource.name) ||
     emailFallback;
 
   return {
