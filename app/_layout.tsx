@@ -17,11 +17,7 @@ export default function RootLayout() {
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="signin/page" />
             <Stack.Screen name="signup/page" />
-            <Stack.Screen name="dashboard/page" />
-            <Stack.Screen name="details/[id]" />
-            <Stack.Screen name="orders/page" />
-            <Stack.Screen name="pizza-register/page" />
-            <Stack.Screen name="pizza-edit/[id]/page" />
+            <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
           </Stack>
           <StatusBar style="auto" />
         </ThemeProvider>

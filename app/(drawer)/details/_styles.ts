@@ -14,6 +14,11 @@ export const styles = StyleSheet.create({
     paddingHorizontal: H_PADDING,
     paddingBottom: 12,
   },
+  backRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   backButton: {
     width: 40,
     height: 40,

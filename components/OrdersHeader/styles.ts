@@ -5,11 +5,18 @@ export const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.RED_2,
     paddingBottom: 20,
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
+  },
+  row: {
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
+  },
+  sideSpacer: {
+    width: 40,
   },
   title: {
+    flex: 1,
     fontFamily: Fonts.serif,
     fontSize: Font_Size.XL,
     color: Colors.WHITE,

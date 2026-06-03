@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams, type Href } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
+import DrawerMenuButton from "@/components/DrawerMenuButton";
 import { styles } from "./_styles";
 
 function leaveDetailsScreen() {
@@ -108,9 +109,12 @@ export default function PizzaDetailsPage() {
   return (
     <View style={styles.container}>
       <View style={styles.backContent}>
-        <TouchableOpacity style={styles.backButton} onPress={leaveDetailsScreen}>
-          <Ionicons name="arrow-back" size={22} color={Colors.WHITE} />
-        </TouchableOpacity>
+        <View style={styles.backRow}>
+          <TouchableOpacity style={styles.backButton} onPress={leaveDetailsScreen}>
+            <Ionicons name="arrow-back" size={22} color={Colors.WHITE} />
+          </TouchableOpacity>
+          <DrawerMenuButton />
+        </View>
       </View>
 
       <View style={styles.header}>

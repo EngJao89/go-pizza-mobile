@@ -26,8 +26,8 @@ import {
 } from "@/schemas/pizzaFlavorForm";
 import type { Pizza } from "@/types/pizza";
 import { useAuth } from "@/contexts/AuthContext";
-import FooterTabs from "@/components/FooterTabs";
-import { styles } from "@/app/pizza-register/_styles";
+import DrawerMenuButton from "@/components/DrawerMenuButton";
+import { styles } from "@/app/(drawer)/pizza-register/_styles";
 
 const PLACEHOLDER_COLOR = "#93797B";
 
@@ -249,9 +249,12 @@ export default function PizzaEditPage() {
           <Ionicons name="chevron-back" size={22} color="#FFFFFF" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Alterar</Text>
-        <Pressable onPress={confirmDelete}>
-          <Text style={styles.deleteText}>Deletar</Text>
-        </Pressable>
+        <View style={styles.headerActions}>
+          <DrawerMenuButton />
+          <Pressable onPress={confirmDelete}>
+            <Text style={styles.deleteText}>Deletar</Text>
+          </Pressable>
+        </View>
       </View>
 
       <ScrollView
@@ -368,7 +371,6 @@ export default function PizzaEditPage() {
           )}
         </TouchableOpacity>
       </ScrollView>
-      <FooterTabs isAdmin ordersCount={0} />
     </View>
   );
 }

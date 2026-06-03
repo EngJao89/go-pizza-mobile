@@ -1,18 +1,15 @@
 import { useCallback, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import FooterTabs from "@/components/FooterTabs";
 import OrderCard from "@/components/OrderCard";
 import OrdersEmptyState from "@/components/OrdersEmptyState";
 import OrdersHeader from "@/components/OrdersHeader";
 import api from "@/lib/axios";
 import { mapOrdersResponseToItems } from "@/lib/map-orders-response";
 import type { OrderItem } from "@/types/order";
-import { useAuth } from "@/contexts/AuthContext";
 import { styles } from "./styles";
 
 export default function OrdersPage() {
-  const { isAdmin } = useAuth();
   const [orders, setOrders] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -89,7 +86,6 @@ export default function OrdersPage() {
           )}
         />
       )}
-      <FooterTabs ordersCount={orders.length} isAdmin={isAdmin} />
     </View>
   );
 }

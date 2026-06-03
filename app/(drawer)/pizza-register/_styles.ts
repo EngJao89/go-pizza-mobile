@@ -33,6 +33,13 @@ export const styles = StyleSheet.create({
     color: Colors.WHITE,
     fontWeight: Platform.OS === "ios" ? "600" : "bold",
   },
+  headerActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    minWidth: 56,
+    justifyContent: "flex-end",
+  },
   deleteText: {
     color: Colors.WHITE,
     fontSize: Font_Size.SM,
