@@ -1,5 +1,5 @@
 import { Image } from "expo-image";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { baseURL } from "@/lib/axios";
 import { productDescription } from "@/lib/map-products-response";
 import type { Product } from "@/types/product";
@@ -8,6 +8,7 @@ import { styles } from "./styles";
 
 type CardProductProps = Readonly<{
   product: Product;
+  onPress?: () => void;
 }>;
 
 function getImageUri(imageUrl: string): string {
@@ -16,12 +17,17 @@ function getImageUri(imageUrl: string): string {
   return `${baseURL}${path}`;
 }
 
-export default function CardProduct({ product }: CardProductProps) {
+export default function CardProduct({ product, onPress }: CardProductProps) {
   const imageUri = getImageUri(product.imageUrl);
   const subtitle = `${product.marca} · ${productDescription(product)}`;
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={onPress}
+      activeOpacity={0.8}
+      disabled={!onPress}
+    >
       <Image source={{ uri: imageUri }} style={styles.image} contentFit="cover" />
       <View style={styles.content}>
         <Text style={styles.name} numberOfLines={2}>
@@ -32,6 +38,6 @@ export default function CardProduct({ product }: CardProductProps) {
         </Text>
         <Text style={styles.price}>R$ {priceFormatter.format(product.valor)}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }

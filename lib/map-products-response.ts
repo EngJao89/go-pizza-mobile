@@ -71,6 +71,15 @@ export function mapProductsResponse(data: unknown): Product[] {
     .filter((product): product is Product => product !== null);
 }
 
+export function mapProductResponse(data: unknown): Product | null {
+  const root = asRecord(data);
+  if (root) {
+    const nested = asRecord(root.data) ?? asRecord(root.product);
+    if (nested) return normalizeProduct(nested);
+  }
+  return normalizeProduct(data);
+}
+
 export function productDescription(product: Product): string {
   return product.descricao ?? product.descriciao ?? product.conteudo;
 }
