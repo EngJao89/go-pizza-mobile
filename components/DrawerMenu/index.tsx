@@ -64,6 +64,12 @@ export default function DrawerMenu(props: DrawerContentComponentProps) {
       icon: "add-circle-outline",
       adminOnly: true,
     },
+    {
+      label: "Cadastrar bebida",
+      href: "/product-register/page" as Href,
+      icon: "beer-outline",
+      adminOnly: true,
+    },
   ];
 
   function navigateTo(href: Href) {
