@@ -8,12 +8,14 @@ type ListHeaderProps = Readonly<{
   search: string;
   onChangeSearch: (value: string) => void;
   userName?: string;
+  searchPlaceholder?: string;
 }>;
 
 export default function ListHeader({
   search,
   onChangeSearch,
   userName = "Garçom",
+  searchPlaceholder = "Buscar pizza",
 }: ListHeaderProps) {
   const insets = useSafeAreaInsets();
 
@@ -39,7 +41,7 @@ export default function ListHeader({
       <View style={styles.searchRow}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Buscar pizza"
+          placeholder={searchPlaceholder}
           placeholderTextColor="#93797B"
           value={search}
           onChangeText={onChangeSearch}

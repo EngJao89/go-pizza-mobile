@@ -53,6 +53,11 @@ export default function DrawerMenu(props: DrawerContentComponentProps) {
       icon: "restaurant-outline",
     },
     {
+      label: "Bebidas",
+      href: "/products/page" as Href,
+      icon: "water-outline",
+    },
+    {
       label: "Pedidos",
       href: "/orders/page" as Href,
       icon: "receipt-outline",
