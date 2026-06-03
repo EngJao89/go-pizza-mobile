@@ -21,6 +21,10 @@ export default function DrawerLayout() {
         options={{ drawerLabel: "Cardápio", title: "Cardápio" }}
       />
       <Drawer.Screen
+        name="products/page"
+        options={{ drawerLabel: "Bebidas", title: "Bebidas" }}
+      />
+      <Drawer.Screen
         name="orders/page"
         options={{ drawerLabel: "Pedidos", title: "Pedidos" }}
       />
