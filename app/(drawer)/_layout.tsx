@@ -37,6 +37,13 @@ export default function DrawerLayout() {
         options={{ drawerLabel: "Cadastrar bebida", title: "Cadastrar bebida" }}
       />
       <Drawer.Screen
+        name="product-details/[id]"
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Detalhes da bebida",
+        }}
+      />
+      <Drawer.Screen
         name="details/[id]"
         options={{
           drawerItemStyle: { display: "none" },

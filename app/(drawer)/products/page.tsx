@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { router, type Href } from "expo-router";
 import CardProduct from "@/components/CardProduct";
 import ListHeader from "@/components/ListHeader";
 import api from "@/lib/axios";
@@ -98,7 +99,14 @@ export default function ProductsPage() {
           style={styles.list}
           data={filteredProducts}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <CardProduct product={item} />}
+          renderItem={({ item }) => (
+            <CardProduct
+              product={item}
+              onPress={() =>
+                router.push(`/product-details/${item.id}` as Href)
+              }
+            />
+          )}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
         />
