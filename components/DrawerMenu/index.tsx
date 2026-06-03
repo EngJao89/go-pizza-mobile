@@ -6,7 +6,7 @@ import {
 } from "@react-navigation/drawer";
 import { router, usePathname, type Href } from "expo-router";
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Colors } from "@/constants/theme";
 import { useAuth } from "@/contexts/AuthContext";
@@ -64,6 +64,11 @@ export default function DrawerMenu(props: DrawerContentComponentProps) {
       badge: ordersCount,
     },
     {
+      label: "Meu perfil",
+      href: "/profile/page" as Href,
+      icon: "person-outline",
+    },
+    {
       label: "Cadastrar pizza",
       href: "/pizza-register/page" as Href,
       icon: "add-circle-outline",
@@ -97,12 +102,15 @@ export default function DrawerMenu(props: DrawerContentComponentProps) {
         { paddingTop: insets.top + 16, paddingBottom: insets.bottom + 16 },
       ]}
     >
-      <View style={styles.header}>
+      <Pressable
+        style={styles.header}
+        onPress={() => navigateTo("/profile/page" as Href)}
+      >
         <Text style={styles.greeting}>Olá,</Text>
         <Text style={styles.userName} numberOfLines={2}>
           {userName || "Visitante"}
         </Text>
-      </View>
+      </Pressable>
 
       {menuItems
         .filter((item) => !item.adminOnly || isAdmin)
