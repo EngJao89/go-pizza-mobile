@@ -29,6 +29,10 @@ export default function DrawerLayout() {
         options={{ drawerLabel: "Cadastrar pizza", title: "Cadastrar pizza" }}
       />
       <Drawer.Screen
+        name="product-register/page"
+        options={{ drawerLabel: "Cadastrar bebida", title: "Cadastrar bebida" }}
+      />
+      <Drawer.Screen
         name="details/[id]"
         options={{
           drawerItemStyle: { display: "none" },
