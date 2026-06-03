@@ -29,6 +29,10 @@ export default function DrawerLayout() {
         options={{ drawerLabel: "Pedidos", title: "Pedidos" }}
       />
       <Drawer.Screen
+        name="profile/page"
+        options={{ drawerLabel: "Meu perfil", title: "Meu perfil" }}
+      />
+      <Drawer.Screen
         name="pizza-register/page"
         options={{ drawerLabel: "Cadastrar pizza", title: "Cadastrar pizza" }}
       />
