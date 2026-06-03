@@ -32,14 +32,10 @@ export const styles = StyleSheet.create({
     opacity: 0.9,
     marginTop: 2,
   },
-  logoutButton: {
-    width: 40,
-    height: 40,
+  menuButton: {
     borderRadius: 20,
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.7)",
-    alignItems: "center",
-    justifyContent: "center",
   },
   searchRow: {
     flexDirection: "row",

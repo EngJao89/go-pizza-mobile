@@ -3,14 +3,13 @@ import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { router, type Href } from "expo-router";
 import CardMenu from "@/components/CardMenu";
 import ListHeader from "@/components/ListHeader";
-import FooterTabs from "@/components/FooterTabs";
 import api from "@/lib/axios";
 import type { Pizza } from "@/types/pizza";
 import { useAuth } from "@/contexts/AuthContext";
 import { styles } from "./_styles";
 
 export default function DashboardPage() {
-  const { userName, isAdmin } = useAuth();
+  const { userName } = useAuth();
   const [pizzas, setPizzas] = useState<Pizza[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -86,7 +85,6 @@ export default function DashboardPage() {
         )}
         contentContainerStyle={styles.listContent}
       />
-      <FooterTabs ordersCount={1} isAdmin={isAdmin} />
     </View>
   );
 }

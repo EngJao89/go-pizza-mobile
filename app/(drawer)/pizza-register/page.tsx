@@ -25,7 +25,7 @@ import {
   type PizzaFlavorFormData,
 } from "@/schemas/pizzaFlavorForm";
 import { useAuth } from "@/contexts/AuthContext";
-import FooterTabs from "@/components/FooterTabs";
+import DrawerMenuButton from "@/components/DrawerMenuButton";
 import { styles } from "./_styles";
 
 function leaveRegisterScreen() {
@@ -151,7 +151,9 @@ export default function PizzaRegisterPage() {
           <Ionicons name="chevron-back" size={22} color="#FFFFFF" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Cadastrar</Text>
-        <Pressable
+        <View style={styles.headerActions}>
+          <DrawerMenuButton />
+          <Pressable
           onPress={() =>
             Alert.alert(
               "Deletar",
@@ -161,6 +163,7 @@ export default function PizzaRegisterPage() {
         >
           <Text style={styles.deleteText}>Deletar</Text>
         </Pressable>
+        </View>
       </View>
 
       <ScrollView
@@ -273,7 +276,6 @@ export default function PizzaRegisterPage() {
           )}
         </TouchableOpacity>
       </ScrollView>
-      <FooterTabs isAdmin ordersCount={0} />
     </View>
   );
 }

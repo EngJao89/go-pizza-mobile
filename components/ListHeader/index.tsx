@@ -1,8 +1,7 @@
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { router, type Href } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useAuth } from "@/contexts/AuthContext";
+import DrawerMenuButton from "@/components/DrawerMenuButton";
 import { styles } from "./styles";
 
 type ListHeaderProps = Readonly<{
@@ -17,12 +16,6 @@ export default function ListHeader({
   userName = "Garçom",
 }: ListHeaderProps) {
   const insets = useSafeAreaInsets();
-  const { signOut } = useAuth();
-
-  async function handleLogout() {
-    await signOut();
-    router.replace("/signin/page" as Href);
-  }
 
   return (
     <View
@@ -40,13 +33,7 @@ export default function ListHeader({
           </View>
         </View>
 
-        <TouchableOpacity
-          style={styles.logoutButton}
-          onPress={handleLogout}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="log-out-outline" size={20} color="#FFFFFF" />
-        </TouchableOpacity>
+        <DrawerMenuButton style={styles.menuButton} />
       </View>
 
       <View style={styles.searchRow}>
